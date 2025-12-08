@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>My Master Fashion</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>My Master Fashion</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="admin/login.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>New Arrivals</h2>
+      <p>Trendy styles curated for you.</p>
+      <a class="btn" href="products.html">Shop Now</a>
+    </section>
+
+    <section class="featured container">
+      <h2>Featured Products</h2>
+      <div id="featured" class="product-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Master Fashion — Bidar, Karnataka</p>
+  </footer>
+
+<script>
+const API = 'http://localhost:4000';
+fetch(API + '/api/products')
+  .then(r=>r.json())
+  .then(data=>{
+    const grid = document.getElementById('featured');
+    grid.innerHTML = data.slice(0,3).map(p=>`
+      <div class="card">
+        <img src="${p.image}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p>₹${p.price}</p>
+      </div>
+    `).join('');
+  }).catch(e=>{
+    document.getElementById('featured').innerHTML='<p>Unable to load products. If you are testing locally, run the backend (port 4000).</p>';
+  });
+</script>
+</body>
+</html>

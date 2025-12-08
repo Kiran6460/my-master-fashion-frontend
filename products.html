@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Products - My Master Fashion</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <h1>My Master Fashion</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="admin/login.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <h2>All Products</h2>
+  <div id="product-list" class="product-grid"></div>
+</main>
+
+<footer>
+  <p>&copy; 2025 My Master Fashion</p>
+</footer>
+
+<script>
+const API_BASE = 'http://localhost:4000';
+function api(url){ return fetch(API_BASE+url).then(r=>r.json()); }
+
+function renderList(data){
+  const el = document.getElementById('product-list');
+  el.innerHTML = data.map(p=>`
+    <div class="card">
+      <img src="${p.image}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>₹${p.price}</p>
+      <p>${p.brand}</p>
+      <p><a href="product.html?id=${p.id}">View</a></p>
+    </div>
+  `).join('');
+}
+
+api('/api/products').then(renderList).catch(e=>{
+  document.getElementById('product-list').innerHTML='<p>Unable to load products. Run backend on http://localhost:4000</p>';
+});
+</script>
+</body>
+</html>
