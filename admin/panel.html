@@ -1,1 +1,25 @@
-admin/panel.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+</head>
+<body>
+
+  <h2>Welcome Admin</h2>
+
+  <button onclick="loadUsers()">Load Users</button>
+
+  <div id="result"></div>
+
+  <script>
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    async function loadUsers() {
+      const res = await fetch(`${API_URL}/admin/users`);
+      const data = await res.json();
+      document.getElementById("result").innerHTML = JSON.stringify(data);
+    }
+  </script>
+
+</body>
+</html>
