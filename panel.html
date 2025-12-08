@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Admin Panel</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../style.css"></head>
+<body>
+<header class="site-header"><div class="container"><h1>Admin Panel</h1></div></header>
+<main class="container">
+  <button id="logout">Logout</button>
+  <h2>Products</h2>
+  <div id="products"></div>
+  <h3>Add Product</h3>
+  <form id="add">
+    <input id="pname" placeholder="Name"><br>
+    <input id="pbrand" placeholder="Brand"><br>
+    <input id="pprice" placeholder="Price" type="number"><br>
+    <input id="pimage" placeholder="Image URL"><br>
+    <textarea id="pdesc" placeholder="Description"></textarea><br>
+    <button>Add</button>
+  </form>
+</main>
+<script>
+const API = 'http://localhost:4000';
+
+function authHeaders(){
+  const token = localStorage.getItem('token');
+  return { 'Content-Type':'application/json', 'Authorization': 'Bearer ' + token };
+}
+
+async function load(){
+  const res = await fetch(API+'/api/products');
+  const data = await res.json();
+  document.getElementById('products').innerHTML = data.map(p=>`
+    <div class="card">
+      <img src="${p.image}" style="width:120px">
+      <h4>${p.name}</h4>
+      <p>₹${p.price}</p>
+      <p>${p.brand}</p>
+      <button onclick="edit(${p.id})">Edit</button>
+      <button onclick="del(${p.id})">Delete</button>
+    </div>
+  `).join('');
+}
+
+async function add(e){
+  e.preventDefault();
+  const body = {
+    name: document.getElementById('pname').value,
+    brand: document.getElementById('pbrand').value,
+    price: Number(document.getElementById('pprice').value),
+    image: document.getElementById('pimage').value || 'https://via.placeholder.com/300',
+    description: document.getElementById('pdesc').value
+  };
+  const res = await fetch(API + '/api/admin/products',{method:'POST',headers: authHeaders(), body: JSON.stringify(body)});
+  if(res.ok){ load(); document.getElementById('add').reset(); } else alert('Error (are you logged in?)');
+}
+
+async function del(id){
+  if(!confirm('Delete?')) return;
+  const res = await fetch(API + '/api/admin/products/'+id, { method:'DELETE', headers: authHeaders() });
+  if(res.ok) load(); else alert('Error');
+}
+
+function edit(id){
+  const name = prompt('New name'); if(name===null) return;
+  const price = prompt('New price'); if(price===null) return;
+  fetch(API + '/api/admin/products/'+id,{method:'PUT',headers: authHeaders(), body: JSON.stringify({ name, price: Number(price)})})
+    .then(r=>{ if(r.ok) load(); else alert('Error'); });
+}
+
+document.getElementById('add').addEventListener('submit', add);
+document.getElementById('logout').addEventListener('click', ()=>{ localStorage.removeItem('token'); location.href='login.html'; });
+
+load();
+</script>
+</body>
+</html>
