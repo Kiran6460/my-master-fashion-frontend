@@ -14,7 +14,7 @@
 <script>
 const params = new URLSearchParams(location.search);
 const id = params.get('id');
-fetch('http://localhost:4000/api/products/'+id).then(r=>r.json()).then(p=>{
+fetch('https://my-master-fashion-backend.onrender.com/products/'+id).then(r=>r.json()).then(p=>{
   document.getElementById('product').innerHTML = `
     <div class="card">
       <img src="${p.image}" alt="${p.name}">
