@@ -47,7 +47,7 @@ body: JSON.stringify({ username, password })
   fetch("https://my-master-fashion-backend.onrender.com/admin/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ username, password })
   })
   .then(res => res.json())
   .then(data => {
