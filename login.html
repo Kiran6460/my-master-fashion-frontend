@@ -1,31 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>Admin Login</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../style.css"></head>
+<head>
+  <title>Admin Login</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      width: 300px;
+      border-radius: 8px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
 <body>
-<header class="site-header"><div class="container"><h1>Admin — My Master Fashion</h1></div></header>
-<main class="container">
-  <h2>Admin Login</h2>
-  <form id="login">
-    <input id="username" placeholder="Username"><br>
-    <input id="password" placeholder="Password" type="password"><br>
-    <button type="submit">Login</button>
-  </form>
-  <div id="msg"></div>
-</main>
+
+<div class="box">
+  <h3>Admin Login</h3>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
 <script>
-document.getElementById('login').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const res = await fetch('https://my-master-fashion-backend.onrender.com/admin/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username,password})});
-  if(res.ok){
-    const data = await res.json();
-    localStorage.setItem('token', data.token);
-    location.href = 'panel.html';
-  } else {
-    document.getElementById('msg').innerText = 'Login failed';
-  }
-});
+function login() {
+  fetch("https://my-master-fashion-backend.onrender.com/admin/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.success){
+      location.href="panel.html";
+    } else {
+      alert("Login Failed");
+    }
+  });
+}
 </script>
+
 </body>
 </html>
