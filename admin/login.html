@@ -41,8 +41,8 @@
 
 <script>
 function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const username = document.querySelector("#email").value;
+body: JSON.stringify({ username, password })
 
   fetch("https://my-master-fashion-backend.onrender.com/admin/login", {
     method: "POST",
